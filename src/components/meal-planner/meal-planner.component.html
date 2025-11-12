@@ -1,0 +1,53 @@
+<div class="space-y-8">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Your Weekly Meal Plan</h1>
+      <p class="mt-1 text-md text-gray-600 dark:text-gray-400">Plan your meals for the week ahead.</p>
+    </div>
+    <div class="flex gap-2 flex-shrink-0">
+      <button (click)="generateRandomPlan()" [disabled]="isLoading()" class="inline-flex items-center gap-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed">
+        @if(isLoading()) {
+          <div role="status" class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+          <span>Generating...</span>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 -ml-1"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.664 0l3.181-3.183m-3.181-4.991v4.99" /></svg>
+          <span>Generate Random Plan</span>
+        }
+      </button>
+      <button (click)="clearWeek()" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 -ml-1"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+        <span>Clear Week</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    @for (day of plannerService.daysOfWeek; track day) {
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">{{ day }}</h2>
+        
+        @if (plannerService.plan()[day]; as recipe) {
+          <a [routerLink]="['/recipe', recipe.idMeal]" class="group flex-grow flex flex-col bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+            <div class="relative">
+                <img [src]="recipe.strMealThumb" [alt]="recipe.strMeal" class="h-40 w-full object-cover">
+                <button (click)="removeMeal(day, $event)" title="Remove Meal" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-3">
+              <h3 class="font-semibold text-gray-900 dark:text-white truncate">{{ recipe.strMeal }}</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ recipe.strCategory }}</p>
+            </div>
+          </a>
+        } @else {
+          <div class="flex-grow flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6">
+            <div class="text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400">No meal planned</p>
+              <a routerLink="/" class="mt-2 inline-block text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500">Add a recipe</a>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

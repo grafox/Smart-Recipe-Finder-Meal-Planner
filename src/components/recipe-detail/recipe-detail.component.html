@@ -1,0 +1,114 @@
+<div>
+  @if (isLoading()) {
+    <div class="text-center py-20">
+      <div role="status" class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]">
+        <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+      </div>
+    </div>
+  }
+  
+  @if (error()) {
+    <div class="text-center py-10 px-4 sm:px-6 lg:px-8 bg-red-50 dark:bg-gray-800 rounded-lg">
+      <h3 class="mt-2 text-lg font-medium text-red-800 dark:text-red-300">Error</h3>
+      <p class="mt-1 text-sm text-red-700 dark:text-red-400">{{ error() }}</p>
+      <div class="mt-6">
+        <a routerLink="/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">Go back to Search</a>
+      </div>
+    </div>
+  }
+
+  @if (recipe(); as currentRecipe) {
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+      <div class="md:flex">
+        <div class="md:flex-shrink-0">
+          <img class="h-64 w-full object-cover md:h-full md:w-64" [src]="currentRecipe.strMealThumb" [alt]="currentRecipe.strMeal">
+        </div>
+        <div class="p-8">
+          <div class="uppercase tracking-wide text-sm text-primary-500 dark:text-primary-400 font-semibold">{{ currentRecipe.strCategory }}</div>
+          <h1 class="block mt-1 text-3xl leading-tight font-extrabold text-black dark:text-white">{{ currentRecipe.strMeal }}</h1>
+          <p class="mt-2 text-gray-500 dark:text-gray-400">From {{ currentRecipe.strArea }}</p>
+          @if (currentRecipe.strTags) {
+            <div class="mt-4 flex flex-wrap gap-2">
+              @for(tag of currentRecipe.strTags.split(','); track tag) {
+                <span class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-full text-xs font-semibold">{{tag.trim()}}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="p-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Ingredients -->
+          <div class="md:col-span-1">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Ingredients</h2>
+            <ul class="space-y-2">
+              @for (ingredient of ingredients(); track $index) {
+                <li class="flex items-start">
+                  <span class="flex-shrink-0 h-6 w-6 text-primary-500 dark:text-primary-400 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                  </span>
+                  <span class="ml-2 text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold">{{ ingredient.name }}</span> - {{ ingredient.measure }}
+                  </span>
+                </li>
+              }
+            </ul>
+          </div>
+          
+          <!-- Instructions -->
+          <div class="md:col-span-2">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Instructions</h2>
+            <div class="prose prose-blue dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 whitespace-pre-line">
+              {{ currentRecipe.strInstructions }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Nutrition & Video -->
+        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-8">
+          @if (nutritionData(); as nutrition) {
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Estimated Nutrition</h2>
+              <div class="grid grid-cols-2 gap-4 text-center">
+                  <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Calories</p>
+                      <p class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ nutrition.calories }}</p>
+                  </div>
+                   <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Protein</p>
+                      <p class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ nutrition.protein }}g</p>
+                  </div>
+                   <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Carbs</p>
+                      <p class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ nutrition.carbs }}g</p>
+                  </div>
+                   <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Fat</p>
+                      <p class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ nutrition.fat }}g</p>
+                  </div>
+              </div>
+               <p class="text-xs text-center mt-2 text-gray-400 dark:text-gray-500">Note: Nutrition data is an estimate and not from a certified source.</p>
+            </div>
+          }
+           @if (youtubeThumbnailUrl(); as thumbnailUrl) {
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Video Tutorial</h2>
+              <a [href]="currentRecipe.strYoutube" target="_blank" rel="noopener noreferrer" class="group relative block w-full rounded-lg overflow-hidden shadow-lg aspect-video">
+                <img [src]="thumbnailUrl" [alt]="'YouTube thumbnail for ' + currentRecipe.strMeal" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  <div class="w-16 h-16 rounded-full bg-red-600 bg-opacity-80 flex items-center justify-center transition-all group-hover:bg-opacity-100 group-hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-white ml-1">
+                      <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.647c1.295.742 1.295 2.545 0 3.286L7.279 20.99c-1.25.722-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

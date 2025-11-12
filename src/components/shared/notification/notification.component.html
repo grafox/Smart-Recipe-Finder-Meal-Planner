@@ -1,0 +1,14 @@
+<div class="fixed bottom-4 right-4 z-50 space-y-3 w-80">
+  @for (notification of notificationService.notifications(); track notification.id) {
+    <div [class]="'flex items-start p-4 rounded-lg shadow-lg ' + getColors(notification.type)" role="alert">
+      <div class="flex-shrink-0" [innerHTML]="getIcon(notification.type) | safeHtml"></div>
+      <div class="ml-3 text-sm font-medium">
+        {{ notification.message }}
+      </div>
+      <button (click)="notificationService.remove(notification.id)" type="button" class="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 rounded-lg p-1.5 focus:ring-2 focus:ring-offset-2" [class.hover:bg-green-200]="notification.type === 'success'" [class.dark:hover:bg-green-800]="notification.type === 'success'" [class.focus:ring-green-400]="notification.type === 'success'" [class.dark:focus:ring-offset-green-900]="notification.type === 'success'" [class.hover:bg-red-200]="notification.type === 'error'" [class.dark:hover:bg-red-800]="notification.type === 'error'" [class.focus:ring-red-400]="notification.type === 'error'" [class.dark:focus:ring-offset-red-900]="notification.type === 'error'" [class.hover:bg-blue-200]="notification.type === 'info'" [class.dark:hover:bg-blue-800]="notification.type === 'info'" [class.focus:ring-blue-400]="notification.type === 'info'" [class.dark:focus:ring-offset-blue-900]="notification.type === 'info'" aria-label="Dismiss">
+        <span class="sr-only">Dismiss</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>
+      </button>
+    </div>
+  }
+</div>

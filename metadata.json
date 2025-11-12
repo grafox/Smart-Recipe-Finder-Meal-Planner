@@ -1,0 +1,5 @@
+{
+  "name": "Smart Recipe Finder & Meal Planner",
+  "description": "An application to discover recipes, plan weekly meals, save favorites, and generate a shopping list. It uses TheMealDB API for recipe data and local storage for persistence.",
+  "requestFramePermissions": []
+}
